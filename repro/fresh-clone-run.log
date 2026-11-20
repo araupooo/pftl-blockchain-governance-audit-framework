@@ -1,0 +1,256 @@
+--- threshold_arithmetic ---
+threshold_arithmetic: PASS (log: outputs/threshold_arithmetic.log)
+== threshold_arithmetic: amendment-majority re-derivation ==
+rules: pre-fix 204/256 with >= | postfiatd 67/100 with > | upstream 80/100 with >
+
+PASS PR53: N=16 postfiatd first majority at 11 yes-votes -- threshold=10, min_yes=11
+PASS PR53: N=16 upstream first majority at 13 yes-votes -- threshold=12, min_yes=13
+PASS PR53: N=16 postfiatd majority lost at 10 yes-votes
+PASS PR53: N=16 upstream majority lost at 12 yes-votes
+PASS PR53: N=10 postfiatd 6 yes = NO majority -- threshold=6
+PASS PR53: N=10 postfiatd 8 yes = majority
+PASS PR53: N=10 postfiatd minimum majority is 7 yes-votes
+PASS BUG: pre-fix N=36 activates at 28 yes-votes (77.78% < 80%) -- 28/36 = 77.78%
+PASS BUG: pre-fix minimum fraction over N=1..200 is below 80% -- min=0.5000
+PASS POSTFIX: postfiatd 67% rule never activates below 67% (N=1..200) -- min fraction=0.6701
+PASS POSTFIX: upstream 80% rule never activates below 80% (N=1..200) -- min fraction=0.8010
+PASS DIVERGENCE: postfiatd bar is weaker than upstream for every N=1..200
+PASS DIVERGENCE: postfiatd bar is strictly weaker than upstream for N>=4 except N=6
+PASS DIVERGENCE: small-N ties are exactly N=1,2,3 (unanimity) and N=6 (5/6 both)
+UNL N=35: postfiatd needs 24 yes-votes (24/35 = 68.57%); upstream needs 29 yes-votes (29/35 = 82.86%); gap=5 validators
+PASS UNL35: postfiatd needs 24 yes-votes of 35 (68.57%)
+PASS UNL35: upstream needs 29 yes-votes of 35 (82.86%)
+
+== boundary table (N, pre-fix min, postfiatd min, upstream min) ==
+   N  pre-fix  postfiatd  upstream
+   1        1          1         1
+   2        1          2         2
+   3        2          3         3
+   4        3          3         4
+   5        3          4         5
+  10        7          7         9
+  16       12         11        13
+  35       27         24        29
+  36       28         25        29
+ 100       79         68        81
+ 200      159        135       161
+
+THRESHOLD RESULT: ALL CHECKS PASSED
+
+--- vote_order_replay ---
+vote_order_replay: PASS (log: outputs/vote_order_replay.log)
+== vote_order_replay: PR #53 pattern, Python model ==
+amendments: A 13/16 yes (majority under both rules), B 11/16 yes (majority only under postfiatd 67%)
+
+run creation/rep1: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run creation/rep1: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run creation/rep2: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run creation/rep2: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run reversed/rep1: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run reversed/rep1: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run reversed/rep2: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run reversed/rep2: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run rotated-5/rep1: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run rotated-5/rep1: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run rotated-5/rep2: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run rotated-5/rep2: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+PASS REPLAY: week-2 canonical trace identical across 3 orders x 2 reps -- distinct traces=1
+PASS REPLAY: week-4 canonical trace identical across 3 orders x 2 reps -- distinct traces=1
+PASS BOUNDARY: A (13/16) passes under postfiatd 67%
+PASS BOUNDARY: B (11/16) passes under postfiatd 67%
+PASS BOUNDARY: A (13/16) passes under upstream 80%
+PASS BOUNDARY: B (11/16) does NOT pass under upstream 80%
+PASS DEDUP: duplicate validations for the same validator count once -- votes A=13 B=11 trusted=16
+PASS STALE: previous-flag-window validations are ignored
+PASS VOTE-CHANGE: V10 flipping yes->no drops B to 10/16, no majority -- B yes-votes after flip=10
+PASS CLOCK: majority recorded at week 2
+PASS CLOCK: losing majority at week 3 clears the recorded time
+
+REPLAY RESULT: ALL CHECKS PASSED
+
+--- doc_code_consistency ---
+doc_code_consistency: PASS (log: outputs/doc_code_consistency.log)
+== doc_code_consistency: threshold figures in docs vs code ==
+pinned postfiatd commit: 0085a1ff885d6a446369cf73a4430f75af22be55
+cloning pinned commit into /tmp/tmp.4uceRwmdQ9 ...
+checkout HEAD: 0085a1ff885d6a446369cf73a4430f75af22be55
+checkout verified: pinned commit 0085a1ff885d6a446369cf73a4430f75af22be55
+
+--- code: include/xrpl/protocol/SystemParameters.h ---
+83:constexpr std::ratio<204, 256> preFixAmendmentMajorityCalcThreshold;
+85:constexpr std::ratio<67, 100> postFixAmendmentMajorityCalcThreshold;
+code post-fix threshold line: constexpr std::ratio<67, 100> postFixAmendmentMajorityCalcThreshold;
+
+--- docs: docs/AmendmentDevelopment.md ---
+72:3. **Voting Process**: Once 67% of trusted validators vote yes for 2 weeks, the amendment activates
+91:- **VoteBehavior::DefaultYes**: Validators will vote for it by default; activates automatically when 67% threshold is reached
+
+--- docs: src/xrpld/app/misc/README.md ---
+70:Amendment must receive at least an 80% approval rate from validating nodes for
+85:- If the Amendment holds an 80% majority for a two week period, nodes will begin
+94:support in their validations. If 80% support is achieved, they will introduce
+
+--- verdict ---
+code implements : 67%
+AmendmentDevelopment.md states : 67%
+app/misc README.md states      : 80%
+CHECK RESULT: DRIFT DETECTED (finding F-02)
+  src/xrpld/app/misc/README.md lines 70-71, 85, 94 state an 80%
+  threshold; the code at SystemParameters.h:85 implements 67%.
+  A reader following the README would expect 13/16 yes-votes to be
+  the minimum for a majority; the code accepts 11/16.
+DOC-CODE RESULT: CHECK COMPLETE
+
+--- majority_clock ---
+majority_clock: PASS (log: outputs/majority_clock.log)
+== majority_clock: two-week hold and dip-reset rule ==
+hold: 14 days; upstream threshold: 80%
+
+PASS RULE: a mid-hold dip resets the majority clock -- resets=[datetime.date(2026, 10, 21)]
+PASS RULE: activation is 14 days after the restart, not after first gain -- activation=2026-11-04
+PASS RULE: without a dip, activation is 14 days after first majority -- activation=2026-10-23
+
+-- worked example: fixCleanup3_4_0 (REPORTED timeline, see header) --
+dip support: 26/35 = 74.29% (< 80% threshold)
+PASS EXAMPLE: 26/35 is below the 80% threshold
+majority first gained : 2026-10-09 -> no-dip activation 2026-10-23
+dip on 2026-10-21 (26/35 for ~2 hours, reported) -> clock resets
+re-derived activation : 2026-11-04 (reported: 2026-11-04 14:46 UTC)
+delay caused by the dip: 12 days
+PASS EXAMPLE: re-derived activation date matches the reported 2026-11-04
+PASS EXAMPLE: a ~2-hour dip costs 12 days of activation delay
+
+-- boundary: dip after the hold completes changes nothing --
+PASS BOUNDARY: dip one day after activation does not un-enable -- activation=2026-10-23
+
+CLOCK RESULT: ALL CHECKS PASSED
+
+--- quorum_arithmetic ---
+quorum_arithmetic: PASS (log: outputs/quorum_arithmetic.log)
+== quorum_arithmetic: UNL overlap, Negative UNL, fee-vote median ==
+default UNL size: 35 validators
+
+-- UNL overlap bounds (Chase & MacBrough 2018; xrpl.org UNL docs) --
+whitepaper bound      : ~20% overlap
+independent analysis  : >40% overlap
+corrected worst case  : >90% overlap of the UNL
+Cobalt (sibling proto): >60% overlap
+PASS OVERLAP: worst-case bound (>90%) is stricter than the 60% belief
+PASS OVERLAP: worst-case bound exceeds the whitepaper bound by 70 points
+
+-- Negative UNL (UNL=35) --
+Negative UNL cap (25% of UNL) : 8 validators
+quorum floor (60% of total)   : 21 validators
+static quorum (80% of 35)     : 28 validators
+PASS NEGUNL: cap is 8 validators (floor of 25% of 35)
+PASS NEGUNL: quorum floor is 21 validators (ceil of 60% of 35)
+PASS NEGUNL: static quorum is 28 validators (ceil of 80% of 35)
+PASS NEGUNL: adjusted quorum with 0 listed never below floor 21 -- adjusted quorum=28
+PASS NEGUNL: adjusted quorum with 1 listed never below floor 21 -- adjusted quorum=28
+PASS NEGUNL: adjusted quorum with 2 listed never below floor 21 -- adjusted quorum=27
+PASS NEGUNL: adjusted quorum with 3 listed never below floor 21 -- adjusted quorum=26
+PASS NEGUNL: adjusted quorum with 4 listed never below floor 21 -- adjusted quorum=25
+PASS NEGUNL: adjusted quorum with 5 listed never below floor 21 -- adjusted quorum=24
+PASS NEGUNL: adjusted quorum with 6 listed never below floor 21 -- adjusted quorum=24
+PASS NEGUNL: adjusted quorum with 7 listed never below floor 21 -- adjusted quorum=23
+PASS NEGUNL: adjusted quorum with 8 listed never below floor 21 -- adjusted quorum=22
+PASS NEGUNL: adjusted quorum falls as listings grow (28 -> 22 at cap)
+
+-- halt condition (static 80%-of-trusted rule) --
+offline=7: remaining=28, quorum=28 -> progress
+offline=8: remaining=27, quorum=28 -> HALT
+offline=9: remaining=26, quorum=28 -> HALT
+PASS HALT: 7 offline (28 remain) still meets the 28 quorum
+PASS HALT: 8 offline (27 remain) cannot meet the 28 quorum -> stops
+note: Negative UNL listings can restore progress once they propagate (listings change slowly by design); the static-rule halt above is the documented '8 or more offline' statement.
+
+-- fee voting: median of trusted preferences --
+PASS FEE: unanimous 10-drop preferences -> median 10 drops
+PASS FEE: 17/35 preferring 0 drops still leaves median at 10 drops -- median=10
+PASS FEE: 18/35 (>50%) preferring 0 drops flips the median to 0 -- median=0
+FLAG: median 0 drops with >50% low-fee votes -> DoS exposure per xrpl.org fee-voting docs (reserves 1 / 0.2 XRP, reference fee 10 drops, since 2024-12-02)
+
+QUORUM RESULT: ALL CHECKS PASSED
+
+--- validator_vote_tracker ---
+validator_vote_tracker: PASS (log: outputs/validator_vote_tracker.log)
+== validator_vote_tracker: dedup, gating, pruning ==
+
+order creation: 4 txs, status=tesSUCCESS, trace=daff1c69a4d1ce5ee288ca71351ee9354ed3f595b600deddd89fbf11d2058cbd
+order reversed: 4 txs, status=tesSUCCESS, trace=daff1c69a4d1ce5ee288ca71351ee9354ed3f595b600deddd89fbf11d2058cbd
+order rotated-3: 4 txs, status=tesSUCCESS, trace=daff1c69a4d1ce5ee288ca71351ee9354ed3f595b600deddd89fbf11d2058cbd
+PASS DEDUP: same batch in 3 orders yields 4 txs each (V01-V04 once)
+PASS DEDUP: canonical tx trace identical across orders
+PASS REPLAY: second doVoting for the same ledger generates 0 new txs -- first=4 second=0
+PASS GATE: ttVALIDATOR_VOTE with amendment disabled -> temDISABLED, 0 txs -- status=temDISABLED txs=0
+PASS PRUNE: after ledgers 1..25, only the last 10 are retained -- retained=[16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+PASS PRUNE: retained vote count is bounded (10 ledgers x 1 vote)
+PASS PROOF: generated tx carries the validation hash as proof -- tx={'ledger': 201, 'validator': 'V07', 'validationHash': 'aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899'}
+
+TRACKER RESULT: ALL CHECKS PASSED
+
+--- incident_replay ---
+incident_replay: PASS (log: outputs/incident_replay.log)
+== incident_replay: catalogue incidents as framework test cases ==
+
+XRPL-2026-clock:
+  control : G-18 majority-clock fragility
+  verdict : AS-DESIGNED
+  why     : 26/35 = 74.29% < 80%: clock reset fired exactly as specified
+  fact    : 26/35 = 74.29%
+PASS REPLAY: XRPL-2026-clock maps to exactly one verdict
+XRPL-2020-lost-majority:
+  control : G-08 vote-concentration / swing-vote analysis
+  verdict : CAUGHT
+  why     : a single large operator swinging the vote is flagged before it happens
+  fact    : Ripple validators voted against fixCheckThreading / fixPayChanRecipientOwnerDir
+PASS REPLAY: XRPL-2020-lost-majority maps to exactly one verdict
+XRPL-2021-rounding:
+  control : G-07 threshold re-derivation
+  verdict : CAUGHT
+  why     : 28/36 = 77.78% activates pre-fix; re-derivation flags it below 80%
+  fact    : 28/36 = 77.78%
+PASS REPLAY: XRPL-2021-rounding maps to exactly one verdict
+NEUTRON-2026:
+  control : G-05 voting-power snapshot before proposal + G-06 acquisition-cost check
+  verdict : CAUGHT
+  why     : vote bought for ~$20,200 shortly before the vote; snapshot rule blocks it
+  fact    : ~$20,200 NTRN; proposal 9 passed with ~82% of votes cast
+PASS REPLAY: NEUTRON-2026 maps to exactly one verdict
+BEANSTALK-2022:
+  control : G-05 voting-power snapshot before proposal + G-19 emergency-path parity
+  verdict : CAUGHT
+  why     : flash-loan voting power (~67% stalk) + emergencyCommit() dividing by current weight: both controls fail on the incident parameters
+  fact    : $182M lost; $76M attacker profit; ~$1B flash loan
+PASS REPLAY: BEANSTALK-2022 maps to exactly one verdict
+SOLANA-SIMD228-2025:
+  control : G-07 threshold arithmetic + G-09 voter-class distribution
+  verdict : AS-DESIGNED
+  why     : 61.4% of participating votes vs 66.67% required: correctly failed; large/small split recorded as a governance-health signal
+  fact    : 74% turnout; 61.4% yes vs 66.67% required
+PASS REPLAY: SOLANA-SIMD228-2025 maps to exactly one verdict
+ETH-DAO-2016:
+  control : G-21 social-layer governance traceability
+  verdict : GAP
+  why     : irregular state change decided off-chain (forums, coin vote, miner signalling); no on-chain vote record exists to audit
+  fact    : block 1,920,000; ~12M ETH moved; ~85% of miners on the fork
+PASS REPLAY: ETH-DAO-2016 maps to exactly one verdict
+BLOCKDAEMON-2026:
+  control : G-23 validator key custody + withdrawal-authority separation
+  verdict : CAUGHT
+  why     : keys copied from a corporate device during off-boarding (Dec 2025); withdraw authority reassigned, vote accounts permanently retired
+  fact    : 5 validators; withdraw authority irreversibly reassigned
+PASS REPLAY: BLOCKDAEMON-2026 maps to exactly one verdict
+
+verdict totals: {'AS-DESIGNED': 2, 'CAUGHT': 5, 'GAP': 1}
+PASS REPLAY: all 8 catalogue incidents are encoded
+PASS REPLAY: at least one incident per verdict class except MITIGATED is recorded honestly (GAP is admitted, not hidden)
+PASS REPLAY: no incident is left unmapped
+
+INCIDENT RESULT: ALL CHECKS PASSED
+
+=== SUMMARY ===
+threshold_arithmetic, vote_order_replay, doc_code_consistency,
+majority_clock, quorum_arithmetic, validator_vote_tracker,
+incident_replay: all completed.
+RUN_ALL RESULT: ALL CHECKS PASSED

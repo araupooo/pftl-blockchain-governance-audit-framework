@@ -61,3 +61,13 @@ and the run still passes. The finding is F-02 in
   postfiatd clone inside `doc_code_consistency.sh`).
 - No other dependencies. All scripts are deterministic: fixed
   inputs, no wall-clock dependence, no randomness.
+
+## Fresh-clone run record (this repository)
+
+- Date: 2026-11-20, 16:07:18–16:07:40 UTC (23:07–23:07 WIB)
+- Cloned commit: `4f3db2dd07e1bab3cb4f5e672852009436ddf0b0`
+- Command: `git clone https://github.com/araupooo/pftl-blockchain-governance-audit-framework && cd pftl-blockchain-governance-audit-framework && bash scripts/run_all.sh`
+- Exit code: 0
+- Result: `RUN_ALL RESULT: ALL CHECKS PASSED` (7/7 checks; "DRIFT DETECTED" is the doc-vs-code finding F-02, as designed)
+- Console log: `repro/fresh-clone-run.log` (256 lines, SHA-256 `3669a462e0c4c76fee52bacfa35edfb34bebb1abffe4108ffdad85063ce806a1`)
+- Agreement with the shipped `outputs/` logs: the 6 deterministic logs are byte-identical; `doc_code_consistency.log` differs only in the temporary clone directory path (a fresh `mktemp` directory each run).
