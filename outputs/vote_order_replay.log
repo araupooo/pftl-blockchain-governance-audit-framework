@@ -1,0 +1,28 @@
+== vote_order_replay: PR #53 pattern, Python model ==
+amendments: A 13/16 yes (majority under both rules), B 11/16 yes (majority only under postfiatd 67%)
+
+run creation/rep1: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run creation/rep1: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run creation/rep2: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run creation/rep2: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run reversed/rep1: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run reversed/rep1: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run reversed/rep2: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run reversed/rep2: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run rotated-5/rep1: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run rotated-5/rep1: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+run rotated-5/rep2: week2 actions={'A': 'tfGotMajority', 'B': 'tfGotMajority'} trace=4929839647ee28978157de0c2a0eb98b90925aeee94ba28f8fc81c2fc9c8a968
+run rotated-5/rep2: week4 actions={'A': 'enable', 'B': 'enable'} trace=105bb981d691228ef5ef2ea8e5632e57bd3c2116e89a39aa5679e99718652195
+PASS REPLAY: week-2 canonical trace identical across 3 orders x 2 reps -- distinct traces=1
+PASS REPLAY: week-4 canonical trace identical across 3 orders x 2 reps -- distinct traces=1
+PASS BOUNDARY: A (13/16) passes under postfiatd 67%
+PASS BOUNDARY: B (11/16) passes under postfiatd 67%
+PASS BOUNDARY: A (13/16) passes under upstream 80%
+PASS BOUNDARY: B (11/16) does NOT pass under upstream 80%
+PASS DEDUP: duplicate validations for the same validator count once -- votes A=13 B=11 trusted=16
+PASS STALE: previous-flag-window validations are ignored
+PASS VOTE-CHANGE: V10 flipping yes->no drops B to 10/16, no majority -- B yes-votes after flip=10
+PASS CLOCK: majority recorded at week 2
+PASS CLOCK: losing majority at week 3 clears the recorded time
+
+REPLAY RESULT: ALL CHECKS PASSED

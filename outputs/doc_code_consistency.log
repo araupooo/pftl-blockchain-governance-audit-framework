@@ -1,0 +1,30 @@
+== doc_code_consistency: threshold figures in docs vs code ==
+pinned postfiatd commit: 0085a1ff885d6a446369cf73a4430f75af22be55
+cloning pinned commit into /tmp/tmp.VXDxCvHohI ...
+checkout HEAD: 0085a1ff885d6a446369cf73a4430f75af22be55
+checkout verified: pinned commit 0085a1ff885d6a446369cf73a4430f75af22be55
+
+--- code: include/xrpl/protocol/SystemParameters.h ---
+83:constexpr std::ratio<204, 256> preFixAmendmentMajorityCalcThreshold;
+85:constexpr std::ratio<67, 100> postFixAmendmentMajorityCalcThreshold;
+code post-fix threshold line: constexpr std::ratio<67, 100> postFixAmendmentMajorityCalcThreshold;
+
+--- docs: docs/AmendmentDevelopment.md ---
+72:3. **Voting Process**: Once 67% of trusted validators vote yes for 2 weeks, the amendment activates
+91:- **VoteBehavior::DefaultYes**: Validators will vote for it by default; activates automatically when 67% threshold is reached
+
+--- docs: src/xrpld/app/misc/README.md ---
+70:Amendment must receive at least an 80% approval rate from validating nodes for
+85:- If the Amendment holds an 80% majority for a two week period, nodes will begin
+94:support in their validations. If 80% support is achieved, they will introduce
+
+--- verdict ---
+code implements : 67%
+AmendmentDevelopment.md states : 67%
+app/misc README.md states      : 80%
+CHECK RESULT: DRIFT DETECTED (finding F-02)
+  src/xrpld/app/misc/README.md lines 70-71, 85, 94 state an 80%
+  threshold; the code at SystemParameters.h:85 implements 67%.
+  A reader following the README would expect 13/16 yes-votes to be
+  the minimum for a majority; the code accepts 11/16.
+DOC-CODE RESULT: CHECK COMPLETE

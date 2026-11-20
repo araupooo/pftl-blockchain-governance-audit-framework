@@ -1,0 +1,21 @@
+== majority_clock: two-week hold and dip-reset rule ==
+hold: 14 days; upstream threshold: 80%
+
+PASS RULE: a mid-hold dip resets the majority clock -- resets=[datetime.date(2026, 10, 21)]
+PASS RULE: activation is 14 days after the restart, not after first gain -- activation=2026-11-04
+PASS RULE: without a dip, activation is 14 days after first majority -- activation=2026-10-23
+
+-- worked example: fixCleanup3_4_0 (REPORTED timeline, see header) --
+dip support: 26/35 = 74.29% (< 80% threshold)
+PASS EXAMPLE: 26/35 is below the 80% threshold
+majority first gained : 2026-10-09 -> no-dip activation 2026-10-23
+dip on 2026-10-21 (26/35 for ~2 hours, reported) -> clock resets
+re-derived activation : 2026-11-04 (reported: 2026-11-04 14:46 UTC)
+delay caused by the dip: 12 days
+PASS EXAMPLE: re-derived activation date matches the reported 2026-11-04
+PASS EXAMPLE: a ~2-hour dip costs 12 days of activation delay
+
+-- boundary: dip after the hold completes changes nothing --
+PASS BOUNDARY: dip one day after activation does not un-enable -- activation=2026-10-23
+
+CLOCK RESULT: ALL CHECKS PASSED

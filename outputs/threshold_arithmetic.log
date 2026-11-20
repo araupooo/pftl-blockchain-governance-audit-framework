@@ -1,0 +1,36 @@
+== threshold_arithmetic: amendment-majority re-derivation ==
+rules: pre-fix 204/256 with >= | postfiatd 67/100 with > | upstream 80/100 with >
+
+PASS PR53: N=16 postfiatd first majority at 11 yes-votes -- threshold=10, min_yes=11
+PASS PR53: N=16 upstream first majority at 13 yes-votes -- threshold=12, min_yes=13
+PASS PR53: N=16 postfiatd majority lost at 10 yes-votes
+PASS PR53: N=16 upstream majority lost at 12 yes-votes
+PASS PR53: N=10 postfiatd 6 yes = NO majority -- threshold=6
+PASS PR53: N=10 postfiatd 8 yes = majority
+PASS PR53: N=10 postfiatd minimum majority is 7 yes-votes
+PASS BUG: pre-fix N=36 activates at 28 yes-votes (77.78% < 80%) -- 28/36 = 77.78%
+PASS BUG: pre-fix minimum fraction over N=1..200 is below 80% -- min=0.5000
+PASS POSTFIX: postfiatd 67% rule never activates below 67% (N=1..200) -- min fraction=0.6701
+PASS POSTFIX: upstream 80% rule never activates below 80% (N=1..200) -- min fraction=0.8010
+PASS DIVERGENCE: postfiatd bar is weaker than upstream for every N=1..200
+PASS DIVERGENCE: postfiatd bar is strictly weaker than upstream for N>=4 except N=6
+PASS DIVERGENCE: small-N ties are exactly N=1,2,3 (unanimity) and N=6 (5/6 both)
+UNL N=35: postfiatd needs 24 yes-votes (24/35 = 68.57%); upstream needs 29 yes-votes (29/35 = 82.86%); gap=5 validators
+PASS UNL35: postfiatd needs 24 yes-votes of 35 (68.57%)
+PASS UNL35: upstream needs 29 yes-votes of 35 (82.86%)
+
+== boundary table (N, pre-fix min, postfiatd min, upstream min) ==
+   N  pre-fix  postfiatd  upstream
+   1        1          1         1
+   2        1          2         2
+   3        2          3         3
+   4        3          3         4
+   5        3          4         5
+  10        7          7         9
+  16       12         11        13
+  35       27         24        29
+  36       28         25        29
+ 100       79         68        81
+ 200      159        135       161
+
+THRESHOLD RESULT: ALL CHECKS PASSED

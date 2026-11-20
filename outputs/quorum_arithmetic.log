@@ -1,0 +1,44 @@
+== quorum_arithmetic: UNL overlap, Negative UNL, fee-vote median ==
+default UNL size: 35 validators
+
+-- UNL overlap bounds (Chase & MacBrough 2018; xrpl.org UNL docs) --
+whitepaper bound      : ~20% overlap
+independent analysis  : >40% overlap
+corrected worst case  : >90% overlap of the UNL
+Cobalt (sibling proto): >60% overlap
+PASS OVERLAP: worst-case bound (>90%) is stricter than the 60% belief
+PASS OVERLAP: worst-case bound exceeds the whitepaper bound by 70 points
+
+-- Negative UNL (UNL=35) --
+Negative UNL cap (25% of UNL) : 8 validators
+quorum floor (60% of total)   : 21 validators
+static quorum (80% of 35)     : 28 validators
+PASS NEGUNL: cap is 8 validators (floor of 25% of 35)
+PASS NEGUNL: quorum floor is 21 validators (ceil of 60% of 35)
+PASS NEGUNL: static quorum is 28 validators (ceil of 80% of 35)
+PASS NEGUNL: adjusted quorum with 0 listed never below floor 21 -- adjusted quorum=28
+PASS NEGUNL: adjusted quorum with 1 listed never below floor 21 -- adjusted quorum=28
+PASS NEGUNL: adjusted quorum with 2 listed never below floor 21 -- adjusted quorum=27
+PASS NEGUNL: adjusted quorum with 3 listed never below floor 21 -- adjusted quorum=26
+PASS NEGUNL: adjusted quorum with 4 listed never below floor 21 -- adjusted quorum=25
+PASS NEGUNL: adjusted quorum with 5 listed never below floor 21 -- adjusted quorum=24
+PASS NEGUNL: adjusted quorum with 6 listed never below floor 21 -- adjusted quorum=24
+PASS NEGUNL: adjusted quorum with 7 listed never below floor 21 -- adjusted quorum=23
+PASS NEGUNL: adjusted quorum with 8 listed never below floor 21 -- adjusted quorum=22
+PASS NEGUNL: adjusted quorum falls as listings grow (28 -> 22 at cap)
+
+-- halt condition (static 80%-of-trusted rule) --
+offline=7: remaining=28, quorum=28 -> progress
+offline=8: remaining=27, quorum=28 -> HALT
+offline=9: remaining=26, quorum=28 -> HALT
+PASS HALT: 7 offline (28 remain) still meets the 28 quorum
+PASS HALT: 8 offline (27 remain) cannot meet the 28 quorum -> stops
+note: Negative UNL listings can restore progress once they propagate (listings change slowly by design); the static-rule halt above is the documented '8 or more offline' statement.
+
+-- fee voting: median of trusted preferences --
+PASS FEE: unanimous 10-drop preferences -> median 10 drops
+PASS FEE: 17/35 preferring 0 drops still leaves median at 10 drops -- median=10
+PASS FEE: 18/35 (>50%) preferring 0 drops flips the median to 0 -- median=0
+FLAG: median 0 drops with >50% low-fee votes -> DoS exposure per xrpl.org fee-voting docs (reserves 1 / 0.2 XRP, reference fee 10 drops, since 2024-12-02)
+
+QUORUM RESULT: ALL CHECKS PASSED

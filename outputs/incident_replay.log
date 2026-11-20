@@ -1,0 +1,57 @@
+== incident_replay: catalogue incidents as framework test cases ==
+
+XRPL-2026-clock:
+  control : G-18 majority-clock fragility
+  verdict : AS-DESIGNED
+  why     : 26/35 = 74.29% < 80%: clock reset fired exactly as specified
+  fact    : 26/35 = 74.29%
+PASS REPLAY: XRPL-2026-clock maps to exactly one verdict
+XRPL-2020-lost-majority:
+  control : G-08 vote-concentration / swing-vote analysis
+  verdict : CAUGHT
+  why     : a single large operator swinging the vote is flagged before it happens
+  fact    : Ripple validators voted against fixCheckThreading / fixPayChanRecipientOwnerDir
+PASS REPLAY: XRPL-2020-lost-majority maps to exactly one verdict
+XRPL-2021-rounding:
+  control : G-07 threshold re-derivation
+  verdict : CAUGHT
+  why     : 28/36 = 77.78% activates pre-fix; re-derivation flags it below 80%
+  fact    : 28/36 = 77.78%
+PASS REPLAY: XRPL-2021-rounding maps to exactly one verdict
+NEUTRON-2026:
+  control : G-05 voting-power snapshot before proposal + G-06 acquisition-cost check
+  verdict : CAUGHT
+  why     : vote bought for ~$20,200 shortly before the vote; snapshot rule blocks it
+  fact    : ~$20,200 NTRN; proposal 9 passed with ~82% of votes cast
+PASS REPLAY: NEUTRON-2026 maps to exactly one verdict
+BEANSTALK-2022:
+  control : G-05 voting-power snapshot before proposal + G-19 emergency-path parity
+  verdict : CAUGHT
+  why     : flash-loan voting power (~67% stalk) + emergencyCommit() dividing by current weight: both controls fail on the incident parameters
+  fact    : $182M lost; $76M attacker profit; ~$1B flash loan
+PASS REPLAY: BEANSTALK-2022 maps to exactly one verdict
+SOLANA-SIMD228-2025:
+  control : G-07 threshold arithmetic + G-09 voter-class distribution
+  verdict : AS-DESIGNED
+  why     : 61.4% of participating votes vs 66.67% required: correctly failed; large/small split recorded as a governance-health signal
+  fact    : 74% turnout; 61.4% yes vs 66.67% required
+PASS REPLAY: SOLANA-SIMD228-2025 maps to exactly one verdict
+ETH-DAO-2016:
+  control : G-21 social-layer governance traceability
+  verdict : GAP
+  why     : irregular state change decided off-chain (forums, coin vote, miner signalling); no on-chain vote record exists to audit
+  fact    : block 1,920,000; ~12M ETH moved; ~85% of miners on the fork
+PASS REPLAY: ETH-DAO-2016 maps to exactly one verdict
+BLOCKDAEMON-2026:
+  control : G-23 validator key custody + withdrawal-authority separation
+  verdict : CAUGHT
+  why     : keys copied from a corporate device during off-boarding (Dec 2025); withdraw authority reassigned, vote accounts permanently retired
+  fact    : 5 validators; withdraw authority irreversibly reassigned
+PASS REPLAY: BLOCKDAEMON-2026 maps to exactly one verdict
+
+verdict totals: {'AS-DESIGNED': 2, 'CAUGHT': 5, 'GAP': 1}
+PASS REPLAY: all 8 catalogue incidents are encoded
+PASS REPLAY: at least one incident per verdict class except MITIGATED is recorded honestly (GAP is admitted, not hidden)
+PASS REPLAY: no incident is left unmapped
+
+INCIDENT RESULT: ALL CHECKS PASSED
